@@ -1,0 +1,51 @@
+package rules.point
+
+import com.drools.demo.domain.model.Order
+
+rule "zero"
+    no-loop true
+    lock-on-active true
+    salience 1
+    when
+        $a : Order(amount <= 100)
+    then
+        $a.setScore(0);
+        System.out.println("不加积分");
+        update($a);
+end
+
+rule "add100"
+    no-loop true
+    lock-on-active true
+    salience 1
+    when
+        $a : Order(amount > 100 && amount <= 500)
+    then
+        $a.setScore(100);
+        System.out.println("加100积分");
+        update($a);
+end
+
+rule "add500"
+    no-loop true
+    lock-on-active true
+    salience 1
+    when
+        $a : Order(amount > 500 && amount <= 1000)
+    then
+        $a.setScore(500);
+        System.out.println("加500积分");
+        update($a);
+end
+
+rule "add1000"
+    no-loop true
+    lock-on-active true
+    salience 1
+    when
+        $a : Order(amount > 1000)
+    then
+        $a.setScore(1000);
+        System.out.println("加1000积分");
+        update($a);
+end
