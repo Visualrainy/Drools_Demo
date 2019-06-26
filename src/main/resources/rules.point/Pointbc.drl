@@ -1,0 +1,10 @@
+package rules.point;
+global java.util.Set passRuleSet;
+import java.util.Map;
+rule "rule1"
+when $data: Map();
+eval((int)$data.get("amount") > 800);
+then
+passRuleSet.add("rule1");
+System.out.println("加积分");
+end

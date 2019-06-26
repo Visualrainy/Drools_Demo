@@ -1,87 +1,45 @@
-import com.drools.demo.domain.model.Order;
 import com.drools.demo.domain.model.Person;
-import com.drools.demo.util.DroolsUtil;
+import com.drools.demo.rule.RuleGenerator;
+import com.drools.demo.rule.model.CompareMethod;
+import com.drools.demo.rule.model.TwCondition;
+import com.drools.demo.rule.model.TwRule;
+import org.kie.api.KieBase;
 import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.StatelessKieSession;
 
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Application {
-    public static void main(String[] args) throws Exception {
-//        KieSession ksession = DroolsUtil.getKieSessionByName("point_ksession");
-//        KieSession ksession = KieServices.Factory.get()
-//                .getKieClasspathContainer().newKieSession("point_ksession");
-        StatelessKieSession statelessKieSession = KieServices.Factory.get()
-                .getKieClasspathContainer().newStatelessKieSession();
-        List<Order> orderList = getInitData();
-        try {
-            for (int i = 0; i < orderList.size(); i++) {
-                Order o = orderList.get(i);
-//                ksession.insert(o);
-//                ksession.fireAllRules();
-                statelessKieSession.execute(o);
-                // 执行完规则后, 执行相关的逻辑
-                addScore(o);
-            }
-        } catch (Exception e) {
+    public static void main(String[] args) throws ParseException {
+        Person user = new Person();
+        user.setLevel(1);
+        user.setName("Name1");
 
-        } finally {
-//            ksession.destroy();
-        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("amount", 810);
+        data.put("bookDate", new SimpleDateFormat("yyyy-MM-dd").parse("2019-06-25"));
+        data.put("person", user);
 
-    }
-    private static void addScore(Order o) {
-        System.out.println("用户" + o.getPerson().getName() + "享受额外增加积分: " + o.getScore());
-    }
+        TwCondition condition1 = new TwCondition("amount", CompareMethod.GRATER, Arrays.asList(800));
+//        TwCondition condition2 = new TwCondition("bookDate", CompareMethod.GRATER, Arrays.asList("2019-06-25"));
 
-    private static List<Order> getInitData() throws Exception {
-        List<Order> orderList = new ArrayList<Order>();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        {
-            Order order = new Order();
-            order.setAmount(80);
-            order.setBookingDate(df.parse("2015-07-01"));
-            Person user = new Person();
-            user.setLevel(1);
-            user.setName("Name1");
-            order.setPerson(user);
-//            order.setScore(111);
-            orderList.add(order);
-        }
-        {
-            Order order = new Order();
-            order.setAmount(200);
-            order.setBookingDate(df.parse("2015-07-02"));
-            Person user = new Person();
-            user.setLevel(2);
-            user.setName("Name2");
-            order.setPerson(user);
-            orderList.add(order);
-        }
-        {
-            Order order = new Order();
-            order.setAmount(800);
-            order.setBookingDate(df.parse("2015-07-03"));
-            Person user = new Person();
-            user.setLevel(3);
-            user.setName("Name3");
-            order.setPerson(user);
-            orderList.add(order);
-        }
-        {
-            Order order = new Order();
-            order.setAmount(1500);
-            order.setBookingDate(df.parse("2015-07-04"));
-            Person user = new Person();
-            user.setLevel(4);
-            user.setName("Name4");
-            order.setPerson(user);
-            orderList.add(order);
-        }
-        return orderList;
+        TwRule twRule = new TwRule("rule1");
+        twRule.setConditions(Collections.singletonList(condition1));
+
+        new RuleGenerator().generatorDrlContent(twRule);
+
+        KieServices kieServices = KieServices.Factory.get();
+        KieContainer kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
+        KieBase kieBase = kieContainer.getKieBase();
+        KieSession kiesession = kieBase.newKieSession();
+        Set passRuleSet = new HashSet();
+        kiesession.setGlobal("passRuleSet", passRuleSet);
+
+        kiesession.insert(data);
+        kiesession.fireAllRules();
+        passRuleSet.forEach(item -> System.out.println("Pass Rule is: " + item));
     }
 }

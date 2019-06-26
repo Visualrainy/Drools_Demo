@@ -1,4 +1,4 @@
-package rules.point
+package rules.point1
 
 import com.drools.demo.domain.model.Order
 

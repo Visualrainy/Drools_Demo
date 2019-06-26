@@ -1,13 +1,13 @@
 package com.drools.demo.rule.model;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TwCondition {
     private CompareMethod compareMethod;
     private String left;
-    private ArrayList right;
+    private List right;
 
-    public TwCondition(String left, CompareMethod compareMethod, ArrayList right) {
+    public TwCondition(String left, CompareMethod compareMethod, List right) {
         this.left = left;
         this.compareMethod = compareMethod;
         this.right = right;
@@ -29,11 +29,11 @@ public class TwCondition {
         this.left = left;
     }
 
-    public ArrayList getRight() {
+    public List getRight() {
         return right;
     }
 
-    public void setRight(ArrayList right) {
+    public void setRight(List right) {
         this.right = right;
     }
 }
