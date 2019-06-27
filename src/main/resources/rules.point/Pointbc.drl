@@ -1,8 +1,0 @@
-package rules.point;
-global java.util.Set passRuleSet;
-import java.util.Map;
-rule "rule1"
-when $data: Map($data.get("amount") >800 ,$data.get("bookDate") before 1561618560549 );
-then 
-passRuleSet.add("rule1");
-end
