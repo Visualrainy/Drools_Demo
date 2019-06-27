@@ -17,23 +17,12 @@ public class TwCondition {
         return compareMethod;
     }
 
-    public void setCompareMethod(CompareMethod compareMethod) {
-        this.compareMethod = compareMethod;
-    }
-
     public String getLeft() {
         return left;
-    }
-
-    public void setLeft(String left) {
-        this.left = left;
     }
 
     public List getRight() {
         return right;
     }
 
-    public void setRight(List right) {
-        this.right = right;
-    }
 }

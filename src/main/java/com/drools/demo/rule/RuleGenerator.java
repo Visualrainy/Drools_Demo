@@ -6,11 +6,10 @@ import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.Message;
 
-import java.text.ParseException;
 import java.util.Set;
 
 public class RuleGenerator {
-    public void generatorDrlContent(TwRule twRule) throws ParseException {
+    public void generatorDrlContent(TwRule twRule) {
         StringBuilder sb = new StringBuilder();
         sb.append("package rules.point;\n")
                 .append("global ")
@@ -20,17 +19,27 @@ public class RuleGenerator {
                 .append("rule \"")
                 .append(twRule.getName())
                 .append("\"\n")
-                .append("when $data: Map();\n");
+                .append("when $data: Map(");
+
 
         twRule.getConditions().forEach(condition -> {
-            sb.append("eval((int)$data.get(\"")
+            sb.append("$data.get(\"")
                     .append(condition.getLeft())
                     .append("\") ")
                     .append(condition.getCompareMethod().getSymbol())
-                    .append(condition.getRight().get(0))
-                    .append(");\n");
-        });
+                    .append(" ");
 
+            if (condition.getRight().get(0) instanceof Number) {
+                sb.append(condition.getRight().get(0))
+                        .append(" ");
+            } else {
+                sb.append("\"").append(condition.getRight().get(0)).append("\" ");
+            }
+            if (twRule.getConditions().lastIndexOf(condition) != twRule.getConditions().size() - 1) {
+                sb.append(",");
+            }
+        });
+        sb.append(");\n");
         sb.append("then \n")
                 .append("passRuleSet.add(")
                 .append("\"" + twRule.getName() + "\"")
@@ -40,7 +49,7 @@ public class RuleGenerator {
         writeDrlMemoryFile(sb.toString());
     }
 
-    private void writeDrlMemoryFile(String rule) throws ParseException {
+    private void writeDrlMemoryFile(String rule) {
         KieServices kieServices = KieServices.Factory.get();
         KieFileSystem kfs = kieServices.newKieFileSystem();
         kfs.write("src/main/resources/rules/point/rules.drl", rule);

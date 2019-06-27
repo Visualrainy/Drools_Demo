@@ -3,7 +3,9 @@ package com.drools.demo.rule.model;
 public enum CompareMethod {
     EQUAL("=="),
     GRATER(">"),
-    SMALLER("<");
+    SMALLER("<"),
+    BEFORE("before"),
+    AFTER("after");
 
     private String symbol;
 
