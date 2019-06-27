@@ -9,7 +9,7 @@ import org.kie.api.builder.Message;
 import java.util.Set;
 
 public class RuleGenerator {
-    public void generatorDrlContent(TwRule twRule) {
+    public static void generatorDrlContent(TwRule twRule) {
         StringBuilder sb = new StringBuilder();
         sb.append("package rules.point;\n")
                 .append("global ")
@@ -49,7 +49,7 @@ public class RuleGenerator {
         writeDrlMemoryFile(sb.toString());
     }
 
-    private void writeDrlMemoryFile(String rule) {
+    private static void writeDrlMemoryFile(String rule) {
         KieServices kieServices = KieServices.Factory.get();
         KieFileSystem kfs = kieServices.newKieFileSystem();
         kfs.write("src/main/resources/rules/point/rules.drl", rule);
