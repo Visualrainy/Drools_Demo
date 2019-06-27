@@ -7,7 +7,6 @@ import org.kie.api.KieBase;
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.StatelessKieSession;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,21 +24,22 @@ public class Application {
         TwRule twRule = new TwRule("rule_demo");
         twRule.setConditions(Arrays.asList(condition1, condition2));
 
-//        new RuleGenerator().generatorDrlContent(twRule);
+        new RuleGenerator().generatorDrlContent(twRule);
 
-//        KieServices kieServices = KieServices.Factory.get();
-//        KieContainer kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
-//        KieBase kieBase = kieContainer.getKieBase();
-//        KieSession kiesession = kieBase.newKieSession();
+        fireRule(facts);
+    }
 
-        StatelessKieSession kiesession = KieServices.Factory.get().getKieClasspathContainer().newStatelessKieSession();
+    private static void fireRule(Map<String, Object> facts) {
+        KieServices kieServices = KieServices.Factory.get();
+        KieContainer kieContainer = kieServices.newKieContainer(kieServices.getRepository().getDefaultReleaseId());
+        KieBase kieBase = kieContainer.getKieBase();
+        KieSession kiesession = kieBase.newKieSession();
 
         Set passRuleSet = new HashSet();
         kiesession.setGlobal("passRuleSet", passRuleSet);
-        kiesession.execute(facts);
-//        kiesession.insert(facts);
-//        kiesession.fireAllRules();
-        passRuleSet.forEach(item -> System.out.println("Pass Rule is: " + item));
+        kiesession.insert(facts);
+        kiesession.fireAllRules();
+        passRuleSet.forEach(item -> System.out.println("Pass Rule is::::::::: " + item));
     }
 
     private static Map<String, Object> generateFacts() throws ParseException {
