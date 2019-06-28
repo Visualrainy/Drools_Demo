@@ -5,7 +5,8 @@ public enum CompareMethod {
     GRATER(">"),
     SMALLER("<"),
     BEFORE("before"),
-    AFTER("after");
+    AFTER("after"),
+    BETWEEN("between");
 
     private String symbol;
 

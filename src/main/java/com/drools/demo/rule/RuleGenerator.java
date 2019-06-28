@@ -1,26 +1,28 @@
 package com.drools.demo.rule;
 
+import com.drools.demo.rule.model.TwCondition;
 import com.drools.demo.rule.model.TwRule;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.Message;
 
+import java.util.List;
 import java.util.Set;
 
 public class RuleGenerator {
     public static void generatorDrlContent(TwRule twRule) {
         StringBuilder sb = new StringBuilder();
-        sb.append("package rules.point;\n")
-                .append("global ")
+
+        sb.append("global ")
                 .append(Set.class.getName())
                 .append(" passRuleSet;\n")
                 .append("import java.util.Map;\n")
+                .append("import java.util.List;\n")
                 .append("rule \"")
                 .append(twRule.getName())
                 .append("\"\n")
                 .append("when $data: Map(");
-
 
         twRule.getConditions().forEach(condition -> {
             sb.append("$data.get(\"")
