@@ -28,17 +28,11 @@ public class RuleHelper {
         return twRule;
     }
 
-    public static List<TwCondition> generateConditions() throws ParseException {
+    public static List<TwCondition> generateConditions() {
         TwCondition condition1 = new TwCondition("amount", CompareMethod.GRATER,
                 Collections.singletonList(800));
         TwCondition condition2 = new TwCondition("bookDate", CompareMethod.BEFORE,
                 Collections.singletonList(new Date().getTime()));
-
-        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2019-06-25");
-        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2019-06-30");
-
-        TwCondition condition3 = new TwCondition("bookDate", CompareMethod.BETWEEN,
-                Arrays.asList(startDate.getTime(), endDate.getTime()));
-        return Arrays.asList(condition1, condition2, condition3);
+        return Arrays.asList(condition1, condition2);
     }
 }
