@@ -56,5 +56,4 @@ public class Application {
         kiesession.fireAllRules();
         passRuleSet.forEach(item -> System.out.println("Pass Rule is::::::::: " + item));
     }
-
 }
